@@ -1,10 +1,17 @@
 #pragma once
 #include "KamataEngine.h"
+#include"Player.h"
+#include"Enemy.h"
+#include"input/Input.h"
+#include <algorithm>
+#include <array>
+#include <numbers>
+#include"MyMath.h"
 
 using namespace KamataEngine;
+using namespace MathUtility;
 
-class GameScene
-{
+class GameScene {
 
 public:
 	// 初期化
@@ -17,10 +24,62 @@ public:
 	~GameScene();
 
 private:
-	// テクスチャハンドル
-	uint32_t textureHandle_ = 0;
 
-	// スプライトを複数持つ
+	//自機--------------------------
+	// 自機ハートハンドル
+	uint32_t hatoHandle_ = 0;
+
+	//敵ハートハンドル
+	uint32_t ehatoHadle_ = 0;
+
+	// 自機ハートを複数持つ
 	std::vector<Sprite*> hearts_;
+	// 敵ハートを複数持つ
+	std::vector<Sprite*> enemyHearts_;
+
+	// プレイヤーHP
+	int playerHP_ = 0;
+	// 敵HP
+	int enemyHP_ = 0;
+
+
+	//自機ハンドル
+	uint32_t playerHandle_ = 0;
+
+	//自機3Dモデルデータ
+	Model* modelPlayer_ = nullptr;
+
+	//自キャラ
+	Player* player_ = nullptr;
+
+	//敵キャラ
+	Enemy* enemy_ = nullptr;
+
+	Model* modelEnemy_ = nullptr;
+
+	//
+
+	//------------------------------
+
+	//攻撃ゲージ
+	uint32_t attackHandle_ = 0;
+	Sprite* attackSprite_ = nullptr;
+	uint32_t attackArrowHandle_ = 0;
+	Sprite* attackArrowSprite_ = nullptr;
+	float attackArrowX = 75;
+	float attackArrowY = 576 - 32;
+	int playerAttackTurn = 3;
+	float attackGaugeLain = attackArrowY - 32;
+	float arrowDirection = -5;
+	int attackGauge2 = 2;
+	int attackGauge3 = 3;
+
+	//カメラ
+	Camera camera_;
+
+	//デバッグカメラ
+	//DebugCamera* debugCamera_ = nullptr;
+	bool isDebugCameraActive_ = false;
+
 
 };
