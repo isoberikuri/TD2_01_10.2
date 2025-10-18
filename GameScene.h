@@ -37,10 +37,14 @@ private:
 	// 敵ハートを複数持つ
 	std::vector<Sprite*> enemyHearts_;
 
+	//	HP管理
+	int playerHPPoint_ = 5;
+	int enemyHPPoint_ = 5;
+
 	// プレイヤーHP
-	int playerHP_ = 0;
+	int playerHP_ = playerHPPoint_;
 	// 敵HP
-	int enemyHP_ = 0;
+	int enemyHP_ = enemyHPPoint_;
 
 
 	//自機ハンドル
@@ -69,10 +73,19 @@ private:
 	float attackArrowX = 75;
 	float attackArrowY = 576 - 32;
 	int playerAttackTurn = 3;
-	float attackGaugeLain = attackArrowY - 32;
+	float attackGaugeLain = attackArrowY + 24;
 	float arrowDirection = -5;
 	int attackGauge2 = 2;
 	int attackGauge3 = 3;
+
+	//シーン切り替え
+	int titleScene = false;
+	int stageRuruScene = false;
+	int stageEnemy1 = false;
+	int stageEnemy2 = false;
+	int stageEnemy3 = false;
+	int gameOver = false;
+	int gameClear = false;
 
 	//カメラ
 	Camera camera_;

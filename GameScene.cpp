@@ -4,13 +4,18 @@
 // 初期化
 void GameScene::Initialize()
 {
+	titleScene = true;
+	if (stageEnemy1 == 1)
+	{
+		playerHP_ = 7;
+	}
 
 	//自キャラ
 	//自機のハート//
 	//ファイル名を指定してテクスチャハンドルを読み込む
 	hatoHandle_ = TextureManager::Load("ha-to.png");
 	// 複数のスプライトを生成
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < playerHPPoint_; i++)
 	{
 		// X座標を少しずつずらして配置
 		Sprite* heart = Sprite::Create(hatoHandle_, {300.0f + i * 55.0f, 660.0f});
@@ -20,7 +25,7 @@ void GameScene::Initialize()
 	// 敵のハート//
 	ehatoHadle_ = TextureManager::Load("Eha-to.png");
 	// 複数のスプライトを生成
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < enemyHPPoint_; i++)
 	{
 		// X座標を少しずつずらして配置
 		Sprite* enemyHeart = Sprite::Create(ehatoHadle_, {1000.0f + i * 55.0f, 10.0f});
@@ -74,7 +79,6 @@ void GameScene::Initialize()
 	//------------------------------------
 
 	playerAttackTurn = 3;
-
 }
 
 
@@ -82,64 +86,121 @@ void GameScene::Initialize()
 // 更新
 void GameScene::Update()
 {
-
-	//自キャラ------------------------------------------
-	// スペースキーが押された瞬間に HP を1減らす
-	if (playerAttackTurn > 0)
+	if (titleScene == 1)
 	{
-		attackArrowY += arrowDirection * 2; // 上下移動のスピード（2ピクセル）
-
-		// 上端 or 下端に達したら方向を反転
-		if (attackArrowY <= 0)
+		if (Input::GetInstance()->TriggerKey(DIK_RETURN))
 		{
-			attackArrowY = 0;
-			arrowDirection = 5; // 下に動くようにする
-		} else if (attackArrowY >= 576)
-		{
-			attackArrowY = 576;
-			arrowDirection = -5; // 上に動くようにする
+			titleScene = 0;
+			stageEnemy1 = 1;
+			playerHPPoint_ = 5;
+			enemyHPPoint_ = 5;
 		}
-		if (Input::GetInstance()->TriggerKey(DIK_SPACE))
+	}
+
+	if (playerHPPoint_ <= 0)
+	{
+		stageEnemy1 = 0;
+		stageEnemy2 = 0;
+		stageEnemy3 = 0;
+		gameOver = 1;
+	}
+	if (playerAttackTurn == 0 && enemyHPPoint_ >= 0)
+	{
+		stageEnemy1 = 0;
+		stageEnemy2 = 0;
+		stageEnemy3 = 0;
+		gameOver = 1;
+	}
+
+	if (stageEnemy1 == 1 || stageEnemy2 == 1 || stageEnemy3 == 1)
+	{
+		// 自キャラ------------------------------------------
+		//  スペースキーが押された瞬間に HP を1減らす
+		if (playerAttackTurn > 0)
 		{
-			if (arrowDirection == 0)
+			attackArrowY += arrowDirection * 2; // 上下移動のスピード（2ピクセル）
+
+			// 上端 or 下端に達したら方向を反転
+			if (attackArrowY <= 0)
+			{
+				attackArrowY = 0;
+				arrowDirection = 5; // 下に動くようにする
+			} else if (attackArrowY >= 576)
 			{
 				attackArrowY = 576;
-				arrowDirection = -5;
+				arrowDirection = -5; // 上に動くようにする
 			}
-			else
+			if (Input::GetInstance()->TriggerKey(DIK_SPACE))
 			{
-				arrowDirection = 0;
-				playerAttackTurn--;
-				if (attackGaugeLain >= 0 && attackGaugeLain <= 106)
+				if (arrowDirection == 0)
 				{
-					playerHP_--;
+					attackArrowY = 576;
+					arrowDirection = -5;
 				}
-				if (attackGaugeLain >= 107 && attackGaugeLain <= 159)
+				else
 				{
-					enemyHP_--;
-				}
-				if (attackGaugeLain >= 160 && attackGaugeLain <= 210)
-				{
-					enemyHP_ = enemyHP_ -= attackGauge2;
-				}
-				if (attackGaugeLain >= 211 && attackGaugeLain <= 262)
-				{
-					enemyHP_ = enemyHP_ -= attackGauge3;
-				}
-				if (attackGaugeLain >= 263 && attackGaugeLain <= 315)
-				{
-					enemyHP_ = enemyHP_ -= attackGauge2;
-				}
-				if (attackGaugeLain >= 316 && attackGaugeLain <= 367)
-				{
-					enemyHP_--;
-				}
-				if (attackGaugeLain >= 368 && attackGaugeLain <= 576)
-				{
-					playerHP_--;
+					arrowDirection = 0;
+					playerAttackTurn--;
+					if (attackGaugeLain >= 0 && attackGaugeLain <= 106)
+					{
+						playerHPPoint_--;
+					}
+					if (attackGaugeLain >= 107 && attackGaugeLain <= 159)
+					{
+						enemyHPPoint_--;
+					}
+					if (attackGaugeLain >= 160 && attackGaugeLain <= 210)
+					{
+						enemyHPPoint_ = enemyHPPoint_ -= attackGauge2;
+					}
+					if (attackGaugeLain >= 211 && attackGaugeLain <= 262)
+					{
+						enemyHPPoint_ = enemyHPPoint_ -= attackGauge3;
+						playerHPPoint_--;
+					}
+					if (attackGaugeLain >= 263 && attackGaugeLain <= 315)
+					{
+						enemyHPPoint_ = enemyHPPoint_ -= attackGauge2;
+					}
+					if (attackGaugeLain >= 316 && attackGaugeLain <= 367)
+					{
+						enemyHPPoint_--;
+					}
+					if (attackGaugeLain >= 368 && attackGaugeLain <= 576)
+					{
+						playerHPPoint_--;
+					}
 				}
 			}
+			if (stageEnemy1 == 1 && enemyHPPoint_ <= 0)
+			{
+				stageEnemy2 = 1;
+				playerHPPoint_ = playerHPPoint_ += 1;
+				enemyHPPoint_ = 5;
+				playerAttackTurn = 3;
+				stageEnemy1 = 0;
+			}
+			if (stageEnemy2 == 1 && enemyHPPoint_ <= 0)
+			{
+				stageEnemy3 = 1;
+				playerHPPoint_ = playerHPPoint_ += 1;
+				enemyHPPoint_ = 5;
+				playerAttackTurn = 3;
+				stageEnemy2 = 0;
+			}
+			if (stageEnemy3 == 1 && enemyHPPoint_ <= 0)
+			{
+				gameClear = 1;
+				stageEnemy3 = 0;
+			}
+
 		}
+		/*if (enemyHP_ <= 0)
+		{
+			stageEnemy1 = 0;
+			stageEnemy2 = 1;
+			playerHPPoint = 6;
+		}*/
 	}
 	attackArrowSprite_->SetPosition({attackArrowX, attackArrowY});
 	attackGaugeLain = attackArrowY + 24;
@@ -165,46 +226,42 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 
-
-	//3Dモデル描画前処理---------------
-	Model::PreDraw();
-
-	////自キャラの描画
-	player_->Draw();
-
-	//敵キャラの描画
-	enemy_->Draw();
-
-	//3Dモデル描画後処理---------------
-	Model::PostDraw();
-
-
-
-
-	// スプライト描画前処理
-	Sprite::PreDraw();
-
-	// 攻撃ゲージ
-	attackSprite_->Draw();
-	attackArrowSprite_->Draw();
-
-	// プレイヤーHP分だけ描画する
-	for (int i = 0; i < playerHP_; i++)
+	if (stageEnemy1 == 1 || stageEnemy2 == 1 || stageEnemy3 == 1)
 	{
-		hearts_[i]->Draw();
+		// 3Dモデル描画前処理---------------
+		Model::PreDraw();
+
+		////自キャラの描画
+		player_->Draw();
+
+		// 敵キャラの描画
+		enemy_->Draw();
+
+		// 3Dモデル描画後処理---------------
+		Model::PostDraw();
+
+		// スプライト描画前処理
+		Sprite::PreDraw();
+
+		// 攻撃ゲージ
+		attackSprite_->Draw();
+		attackArrowSprite_->Draw();
+
+		// プレイヤーHP分だけ描画する
+		for (int i = 0; i < playerHPPoint_; i++)
+		{
+			hearts_[i]->Draw();
+		}
+
+		// 敵ハートは常に全描画
+		for (int i = 0; i < enemyHPPoint_; i++)
+		{
+			enemyHearts_[i]->Draw();
+		}
+
+		// スプライト描画後処理
+		Sprite::PostDraw();
 	}
-
-	// 敵ハートは常に全描画
-	for (int i = 0; i < enemyHP_; i++)
-	{
-		enemyHearts_[i]->Draw();
-	}
-
-	// スプライト描画後処理
-	Sprite::PostDraw();
-
-	
-
 
 }
 
