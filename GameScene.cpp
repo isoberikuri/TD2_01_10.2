@@ -55,6 +55,10 @@ void GameScene::Initialize()
 	attackSprite_ = Sprite::Create(attackHandle_, {0, 0});
 	attackArrowHandle_ = TextureManager::Load("RighAttackArrow.png");
 	attackArrowSprite_ = Sprite::Create(attackArrowHandle_, {attackArrowX,attackArrowY});
+	//ルール説明
+	gameRuruHandle_ = TextureManager::Load("TD2_GameRuru1.png");
+	gameRuruSprite_ = Sprite::Create(gameRuruHandle_, {0, 0});
+
 
 	//カメラの初期化
 	camera_.Initialize();
@@ -81,37 +85,39 @@ void GameScene::Initialize()
 	playerAttackTurn = 3;
 }
 
-
+bool canPress = true;
 
 // 更新
 void GameScene::Update()
 {
+	//タイトルシーン
 	if (titleScene == 1)
 	{
 		if (Input::GetInstance()->TriggerKey(DIK_RETURN))
 		{
+			canPress = false; // 一時的に無効化
 			titleScene = 0;
+			gameRuruScene = 1;
+		}
+		// キーが離されたら再び有効にする
+		if (!Input::GetInstance()->IsPressKey(DIK_RETURN)) {
+			canPress = true;
+	}
+
+	//ルール説明
+	if (gameRuruScene == 1)
+	{
+		gameRuruSprite_->SetPosition({0,0});
+		if (Input::GetInstance()->TriggerKey(DIK_SPACE))
+		{
+			gameRuruScene = 0;
 			stageEnemy1 = 1;
 			playerHPPoint_ = 5;
 			enemyHPPoint_ = 5;
 		}
 	}
 
-	if (playerHPPoint_ <= 0)
-	{
-		stageEnemy1 = 0;
-		stageEnemy2 = 0;
-		stageEnemy3 = 0;
-		gameOver = 1;
-	}
-	if (playerAttackTurn == 0 && enemyHPPoint_ >= 0)
-	{
-		stageEnemy1 = 0;
-		stageEnemy2 = 0;
-		stageEnemy3 = 0;
-		gameOver = 1;
-	}
-
+	//ステージ
 	if (stageEnemy1 == 1 || stageEnemy2 == 1 || stageEnemy3 == 1)
 	{
 		// 自キャラ------------------------------------------
@@ -172,6 +178,8 @@ void GameScene::Update()
 					}
 				}
 			}
+
+			//ネクストステージ
 			if (stageEnemy1 == 1 && enemyHPPoint_ <= 0)
 			{
 				stageEnemy2 = 1;
@@ -180,6 +188,7 @@ void GameScene::Update()
 				playerAttackTurn = 3;
 				stageEnemy1 = 0;
 			}
+			// ネクストステージ
 			if (stageEnemy2 == 1 && enemyHPPoint_ <= 0)
 			{
 				stageEnemy3 = 1;
@@ -188,19 +197,30 @@ void GameScene::Update()
 				playerAttackTurn = 3;
 				stageEnemy2 = 0;
 			}
+			//ゲームクリアへ
 			if (stageEnemy3 == 1 && enemyHPPoint_ <= 0)
 			{
 				gameClear = 1;
 				stageEnemy3 = 0;
 			}
+			// ゲームオーバーへ
+			if (playerHPPoint_ <= 0)
+			{
+				stageEnemy1 = 0;
+				stageEnemy2 = 0;
+				stageEnemy3 = 0;
+				gameOver = 1;
+			}
+			// ゲームオーバーへ
+			if (playerAttackTurn == 0 && enemyHPPoint_ >= 0)
+			{
+				stageEnemy1 = 0;
+				stageEnemy2 = 0;
+				stageEnemy3 = 0;
+				gameOver = 1;
+			}
 
 		}
-		/*if (enemyHP_ <= 0)
-		{
-			stageEnemy1 = 0;
-			stageEnemy2 = 1;
-			playerHPPoint = 6;
-		}*/
 	}
 	attackArrowSprite_->SetPosition({attackArrowX, attackArrowY});
 	attackGaugeLain = attackArrowY + 24;
@@ -225,6 +245,17 @@ void GameScene::Update()
 // 描画
 void GameScene::Draw()
 {
+
+	if (gameRuruScene == 1)
+	{
+		// スプライト描画前処理
+		Sprite::PreDraw();
+
+		gameRuruSprite_->Draw();
+
+		// スプライト描画後処理
+		Sprite::PostDraw();
+	}
 
 	if (stageEnemy1 == 1 || stageEnemy2 == 1 || stageEnemy3 == 1)
 	{
@@ -288,6 +319,7 @@ GameScene::~GameScene()
 
 	delete attackSprite_;
 	delete attackArrowSprite_;
+	delete gameRuruSprite_;
 
 	//敵---------------------------------------------------------
 

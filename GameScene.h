@@ -36,6 +36,10 @@ private:
 	std::vector<Sprite*> hearts_;
 	// 敵ハートを複数持つ
 	std::vector<Sprite*> enemyHearts_;
+	//ルール説明
+	uint32_t gameRuruHandle_ = 0;
+	Sprite* gameRuruSprite_ = nullptr;
+
 
 	//	HP管理
 	int playerHPPoint_ = 5;
@@ -80,7 +84,7 @@ private:
 
 	//シーン切り替え
 	int titleScene = false;
-	int stageRuruScene = false;
+	int gameRuruScene = false;
 	int stageEnemy1 = false;
 	int stageEnemy2 = false;
 	int stageEnemy3 = false;
