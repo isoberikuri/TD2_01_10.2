@@ -100,8 +100,8 @@ void GameScene::Update()
 			gameRuruScene = 1;
 		}
 		// キーが離されたら再び有効にする
-		if (!Input::GetInstance()->IsPressKey(DIK_RETURN)) {
-			canPress = true;
+		/*if (!Input::GetInstance()->IsPressKey(DIK_RETURN)) {
+			canPress = true;*/
 	}
 
 	//ルール説明
