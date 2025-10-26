@@ -1,102 +1,174 @@
 #pragma once
+#include "Enemy.h"
 #include "KamataEngine.h"
-#include"Player.h"
-#include"Enemy.h"
-#include"input/Input.h"
+#include "MyMath.h"
+#include "Player.h"
+#include "beam.h"
+#include "input/Input.h"
+#include "kaminari.h"
+#include "toge.h"
 #include <algorithm>
 #include <array>
 #include <numbers>
-#include"MyMath.h"
 
 using namespace KamataEngine;
 using namespace MathUtility;
 
+//==================================================
+// ゲームのメインシーンを管理するクラス
+// プレイヤー、敵、HP、攻撃ゲージ、カメラなどを統括する
+//==================================================
 class GameScene {
 
 public:
-	// 初期化
+	//--------------------------------------------------
+	// メイン処理（ゲームループの中で呼ばれる）
+	//--------------------------------------------------
+
+	// 初期化処理（ゲーム開始時に1回だけ呼ばれる）
 	void Initialize();
-	// 更新
+
+	// 更新処理（毎フレーム呼ばれる：入力や動きの処理など）
 	void Update();
-	// 描画
+
+	// 描画処理（毎フレーム呼ばれる：画面に描く）
 	void Draw();
-	// デストラクタ
+
+	// デストラクタ（終了時にメモリを解放）
 	~GameScene();
 
-private:
+	void StartCameraShake();
 
-	//自機--------------------------
-	// 自機ハートハンドル
+private:
+	//==================================================
+	// ▼ 自機（プレイヤー）関連
+	//==================================================
+
+	// 自機のハート画像（テクスチャ）ハンドル
 	uint32_t hatoHandle_ = 0;
 
-	//敵ハートハンドル
+	// 敵のハート画像（テクスチャ）ハンドル
 	uint32_t ehatoHadle_ = 0;
 
-	// 自機ハートを複数持つ
+	// 自機のハートスプライト（HP表示用）を複数管理
 	std::vector<Sprite*> hearts_;
-	// 敵ハートを複数持つ
+
+	// 敵のハートスプライト（HP表示用）を複数管理
 	std::vector<Sprite*> enemyHearts_;
-	//ルール説明
+
+	// ルール説明
 	uint32_t gameRuruHandle_ = 0;
 	Sprite* gameRuruSprite_ = nullptr;
 
-
-	//	HP管理
+	// HP管理
 	int playerHPPoint_ = 5;
+
 	int enemyHPPoint_ = 5;
 
-	// プレイヤーHP
+	// プレイヤーのHP（ハート数で決まる）
 	int playerHP_ = playerHPPoint_;
-	// 敵HP
+
+	// 敵のHP（ハート数で決まる）
 	int enemyHP_ = enemyHPPoint_;
 
-
-	//自機ハンドル
+	// プレイヤーの画像ハンドル
 	uint32_t playerHandle_ = 0;
 
-	//自機3Dモデルデータ
+	// プレイヤーの3Dモデルデータ
 	Model* modelPlayer_ = nullptr;
 
-	//自キャラ
+	// プレイヤーキャラクター本体
 	Player* player_ = nullptr;
 
-	//敵キャラ
+	// 敵キャラクター本体
 	Enemy* enemy_ = nullptr;
 
+	// 敵の3Dモデルデータ
 	Model* modelEnemy_ = nullptr;
 
-	//
+	// とげ攻撃本体
+	Toge* toge_ = nullptr;
 
-	//------------------------------
+	// とげ攻撃の3Dモデルデータ
+	Model* modelToge_ = nullptr;
 
-	//攻撃ゲージ
+	// 雷攻撃本体
+	Kaminari* kami_ = nullptr;
+
+	// 雷攻撃の3Dモデルデータ
+	Model* modelKami_ = nullptr;
+
+	// ビーム攻撃本体
+	Beam* beam_ = nullptr;
+
+	// ビーム攻撃の3Dモデルデータ
+	Model* modelBeam_ = nullptr;
+
+	////Playerから発射する位置
+	// Vector3 playerPos = player_->worldTransform_.translation_;
+
+	//==================================================
+	// ▼ 攻撃ゲージ関連
+	//==================================================
+
+	// 攻撃ゲージ本体の画像ハンドル
 	uint32_t attackHandle_ = 0;
+
+	// 攻撃ゲージスプライト
 	Sprite* attackSprite_ = nullptr;
+
+	// 攻撃ゲージの矢印画像ハンドル
 	uint32_t attackArrowHandle_ = 0;
+
+	// 攻撃ゲージの矢印スプライト
 	Sprite* attackArrowSprite_ = nullptr;
+
+	// 矢印の現在の座標（X位置は固定、Yが上下移動）
 	float attackArrowX = 75;
 	float attackArrowY = 576 - 32;
+
+	// プレイヤーが攻撃できる残り回数
 	int playerAttackTurn = 3;
-	float attackGaugeLain = attackArrowY + 24;
+
+	// 攻撃判定ライン（矢印の位置を判定用に保存）
+	float attackGaugeLain = attackArrowY - 32;
+
+	// 矢印の移動方向（-5 = 上へ、+5 = 下へ）
 	float arrowDirection = -5;
+
+	// 攻撃倍率（中攻撃）
 	int attackGauge2 = 2;
+
+	// 攻撃倍率（強攻撃）
 	int attackGauge3 = 3;
 
-	//シーン切り替え
-	int titleScene = false;
-	int gameRuruScene = false;
-	int stageEnemy1 = false;
-	int stageEnemy2 = false;
-	int stageEnemy3 = false;
-	int gameOver = false;
-	int gameClear = false;
+	// シーン切り替え
+	bool titleScene = false;
+	bool gameRuruScene = false;
+	bool stageEnemy1 = false;
+	bool stageEnemy2 = false;
+	bool stageEnemy3 = false;
+	bool gameOver = false;
+	bool gameClear = false;
 
-	//カメラ
+	//==================================================
+	// ▼ カメラ関連
+	//==================================================
+
+	// 通常カメラ
 	Camera camera_;
 
-	//デバッグカメラ
-	//DebugCamera* debugCamera_ = nullptr;
+	// デバッグカメラ（※現在は未使用。必要に応じて有効化可能）
+	// DebugCamera* debugCamera_ = nullptr;
+
+	// デバッグカメラ使用フラグ
 	bool isDebugCameraActive_ = false;
 
+	// カメラの揺れ
+	bool isCameraShaking_ = false;
+	int cameraShakeTimer_ = 0;
+	float cameraShakePower_ = 0.05f;
 
+	// カメラの元位置を保存
+	Vector3 defaultCameraPos_ = {0.0f, 1.0f, -10.0f};
 };

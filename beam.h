@@ -1,9 +1,10 @@
+#pragma once
 #include "KamataEngine.h"
 #include "MyMath.h"
 
 using namespace KamataEngine;
 
-class Enemy {
+class Beam {
 public:
 	// 初期化
 	void Initialize(Model* model, Camera* camera);
@@ -12,10 +13,11 @@ public:
 	// 描画
 	void Draw();
 
-	 // ダメージを受けたとき呼ばれる関数
-	void OnDamage();
+	 // ★ 弱攻撃で呼び出す関数
+	void Activate(const Vector3& startPos);
 
-	 Vector3 GetWorldPosition() const { return worldTransform_.translation_; }
+	// 表示してるか確認用（必要なら）
+	bool IsActive() const { return isActive_; }
 
 private:
 	// ワールド変換データ
@@ -26,8 +28,7 @@ private:
 	// カメラ
 	Camera* camera_ = nullptr;
 
-	// ノックバック関連
-	bool isDamaged_ = false;
-	int damageTimer_ = 0;
-	float knockbackPower_ = 0.1f; // ノックバックの強さ（大きくしたければ0.2f〜0.3fに）
+	// ★追加
+	bool isActive_ = false;
+	int timer_ = 0;
 };
