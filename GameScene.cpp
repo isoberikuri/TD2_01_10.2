@@ -173,7 +173,9 @@ void GameScene::Update() {
 			titleScene = 0;
 			gameClear = 0;
 			gameOver = 0;
+			delayTimerPoint = 0;
 			gameRuruScene = 1;
+			delayTimer = 150;
 			//音声停止
 			Audio::GetInstance()->StopWave(voiceTitleHandle_);
 
@@ -204,9 +206,22 @@ void GameScene::Update() {
 		// voiceStageHandle_ = Audio::GetInstance()->PlayWave(stageBgmHandle_, true);
 		// 自キャラ------------------------------------------
 		//  スペースキーが押された瞬間に HP を1減らす
-		if (playerAttackTurn > 0)
+		if (playerAttackTurn >= 0)
 		{
 			attackArrowY += arrowDirection * 2; // 上下移動のスピード（2ピクセル）
+
+			// 画面上端で反転
+			if (attackArrowY <= 0)
+			{
+				attackArrowY = 0;
+				arrowDirection = 5; // 下方向に
+			}
+			// 画面下端で反転
+			else if (attackArrowY >= 576)
+			{
+				attackArrowY = 576;
+				arrowDirection = -5; // 上方向に
+			}
 
 			//------------------------------------------
 			// スペースキーで攻撃判定
@@ -300,14 +315,14 @@ void GameScene::Update() {
 				}
 				if (delayTimer <= 0)
 				{
-					delayTimerPoint = 0;
-					delayTimer = 150;
 					stageEnemy2 = 1;
 					playerHPPoint_ += 1;
 					enemyHPPoint_ = 5;
 					playerAttackTurn = 3;
 					stageEnemy1 = 0;
 					enemy_->Initialize(enemyModel2_, &camera_);
+					delayTimer = 150;
+					delayTimerPoint = 0;
 				}
 				/*stageEnemy2 = 1;
 				playerHPPoint_ += 1;
@@ -344,36 +359,76 @@ void GameScene::Update() {
 			// ゲームクリアへ
 			if (stageEnemy3 == 1 && enemyHPPoint_ <= 0)
 			{
-				gameClearSprite_->SetPosition({0, 0});
+				delayTimerPoint = 1;
+				if (delayTimerPoint == 1)
+				{
+					delayTimer--;
+				}
+				if (delayTimer <= 0)
+				{
+					delayTimerPoint = 0;
+					delayTimer = 150;
+					gameClearSprite_->SetPosition({0, 0});
+					gameClear = 1;
+					gameOver = 0;
+					stageEnemy3 = 0;
+				}
+				/*gameClearSprite_->SetPosition({0, 0});
 				gameClear = 1;
 				gameOver = 0;
-				stageEnemy3 = 0;
+				stageEnemy3 = 0;*/
 			}
 			// ゲームオーバーへ
-			if (delayTimerPoint == 0)
+			if (delayTimerPoint <= 0)
 			{
 				if (playerHPPoint_ <= 0)
 				{
-					stageEnemy1 = 0;
+					delayTimerPoint = 1;
+					if (delayTimerPoint == 1)
+					{
+						delayTimer--;
+					}
+					if (delayTimer <= 0)
+					{
+						delayTimerPoint = 0;
+						delayTimer = 150;
+						stageEnemy1 = 0;
+						stageEnemy2 = 0;
+						stageEnemy3 = 0;
+						gameClear = 0;
+						gameOver = 1;
+					}
+					/*stageEnemy1 = 0;
 					stageEnemy2 = 0;
 					stageEnemy3 = 0;
 					gameClear = 0;
-					gameOver = 1;
+					gameOver = 1;*/
 				}
 			}
 			
 		}
 		// ゲームオーバーへ
-		if (delayTimerPoint == 0)
+		if (playerAttackTurn <= 0 && enemyHPPoint_ >= 1)
 		{
-			if (playerAttackTurn == 0 && enemyHPPoint_ >= 0)
+			delayTimerPoint = 1;
+			if (delayTimerPoint == 1)
 			{
+				delayTimer--;
+			}
+			if (delayTimer <= 0) {
+				delayTimerPoint = 0;
+				delayTimer = 150;
 				stageEnemy1 = 0;
 				stageEnemy2 = 0;
 				stageEnemy3 = 0;
 				gameClear = 0;
 				gameOver = 1;
 			}
+			/*stageEnemy1 = 0;
+			stageEnemy2 = 0;
+			stageEnemy3 = 0;
+			gameClear = 0;
+			gameOver = 1;*/
 		}
 		
 	}
