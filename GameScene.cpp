@@ -153,6 +153,13 @@ void GameScene::Initialize()
 	soundTogeHandle_ = Audio::GetInstance()->LoadWave("toge.mp3");
 	soundBeamHandle_ = Audio::GetInstance()->LoadWave("beam.mp3");
 	soundKamiHandle_ = Audio::GetInstance()->LoadWave("kaminari.mp3");
+
+	//スカイドーム
+	modelSkydome_ = Model::CreateFromOBJ("SkyDome", true);
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_, &camera_);
+
+
 }
 
 bool canPress = true;
@@ -165,7 +172,10 @@ void GameScene::Update() {
 	// タイトルシーン
 	if (titleScene == 1)
 	{
-		
+		//スカイドーム
+		modelSkydome_ = Model::CreateFromOBJ("SkyDome", true);
+		skydome_->Initialize(modelSkydome_, &camera_);
+
 		gameTitleSprite_->SetPosition({0, 0});
 		if (Input::GetInstance()->TriggerKey(DIK_RETURN))
 		{
@@ -203,6 +213,8 @@ void GameScene::Update() {
 	// ステージ
 	if (stageEnemy1 == 1 || stageEnemy2 == 1 || stageEnemy3 == 1 )
 	{
+		//スカイドーム
+		skydome_->Update();
 		// voiceStageHandle_ = Audio::GetInstance()->PlayWave(stageBgmHandle_, true);
 		// 自キャラ------------------------------------------
 		//  スペースキーが押された瞬間に HP を1減らす
@@ -323,6 +335,9 @@ void GameScene::Update() {
 					enemy_->Initialize(enemyModel2_, &camera_);
 					delayTimer = 150;
 					delayTimerPoint = 0;
+					// スカイドーム
+					modelSkydome_ = Model::CreateFromOBJ("SkyDome2", true);
+					skydome_->Initialize(modelSkydome_, &camera_);
 				}
 				/*stageEnemy2 = 1;
 				playerHPPoint_ += 1;
@@ -348,6 +363,9 @@ void GameScene::Update() {
 					enemyHPPoint_ = 5;
 					playerAttackTurn = 3;
 					stageEnemy2 = 0;
+					//スカイドーム
+					modelSkydome_ = Model::CreateFromOBJ("SkyDome3", true);
+					skydome_->Initialize(modelSkydome_, &camera_);
 				}
 				/*stageEnemy3 = 1;
 				playerHPPoint_ += 1;
@@ -586,6 +604,8 @@ void GameScene::Draw()
 		toge_->Draw();   // とげ攻撃
 		kami_->Draw();   // 雷攻撃
 		beam_->Draw();   // ビーム攻撃
+		//スカイドーム
+		skydome_->Draw();
 
 		Model::PostDraw();
 
@@ -644,6 +664,8 @@ GameScene::~GameScene()
 	delete attackArrowSprite_;
 	delete gameRuruSprite_;
 	delete gameTitleSprite_;
+	//スカイドーム
+	delete modelSkydome_;
 
 	//------------------------------------------
 	// 敵関連の解放

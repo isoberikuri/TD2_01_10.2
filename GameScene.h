@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <array>
 #include <numbers>
+#include "Skydome.h"
 
 using namespace KamataEngine;
 using namespace MathUtility;
@@ -170,6 +171,10 @@ private:
 	//遅延タイマー
 	int delayTimerPoint = false;
 	int delayTimer = 150;
+
+	//スカイドーム
+	KamataEngine::Model* modelSkydome_ = nullptr;
+	Skydome* skydome_ = nullptr;
 
 	//==================================================
 	// ▼ カメラ関連
