@@ -154,7 +154,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Attack.cpp" />
     <ClCompile Include="beam.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -262,7 +261,6 @@
     <None Include="Resources\shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Attack.h" />
     <ClInclude Include="beam.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameScene.h" />

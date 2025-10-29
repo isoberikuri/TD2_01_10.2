@@ -1,7 +1,7 @@
 #include "toge.h"
 
 void Toge::Initialize(Model* model, Camera* camera) {
-	assert(model);
+	//assert(model);
 	model_ = model;
 	camera_ = camera;
 	worldTransform_.Initialize();

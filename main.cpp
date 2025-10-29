@@ -8,7 +8,7 @@ using namespace KamataEngine;
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
 	//エンジンの初期化
-	KamataEngine::Initialize(L"2162_タイトル");
+	KamataEngine::Initialize(L"2162_ひげぷにウォーター");
 
 	//ゲームシーンのインスタンス生成
 	GameScene* gameScene = new GameScene();
@@ -17,13 +17,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 	//DirectXCommonインスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
-
-	//int attackGaugePatternA = false;
-	//int attackGaugePatternB = false;
-	//int attackGaugePatternC = false;
-	//int attackGauge;
-	////attackGauge = Novice::LoadTexture("./resources/geegiBer.png");
-	//int attackGaugeLainY = 0;
 
 	//メインループ
 	while (true) {

@@ -56,9 +56,21 @@ private:
 	// 敵のハートスプライト（HP表示用）を複数管理
 	std::vector<Sprite*> enemyHearts_;
 
+	// タイトル
+	uint32_t gameTitleHandle_ = 0;
+	Sprite* gameTitleSprite_ = nullptr;
+
 	// ルール説明
 	uint32_t gameRuruHandle_ = 0;
 	Sprite* gameRuruSprite_ = nullptr;
+
+	// ゲームクリア
+	uint32_t gameClearHandle_ = 0;
+	Sprite* gameClearSprite_ = nullptr;
+
+	// ゲームオーバ
+	uint32_t gameOverHandle_ = 0;
+	Sprite* gameOverSprite_ = nullptr;
 
 	// HP管理
 	int playerHPPoint_ = 5;
@@ -85,6 +97,10 @@ private:
 
 	// 敵の3Dモデルデータ
 	Model* modelEnemy_ = nullptr;
+
+	Model* enemyModel1_ = nullptr;
+	Model* enemyModel2_ = nullptr;
+	Model* enemyModel3_ = nullptr;
 
 	// とげ攻撃本体
 	Toge* toge_ = nullptr;
@@ -151,6 +167,10 @@ private:
 	bool gameOver = false;
 	bool gameClear = false;
 
+	//遅延タイマー
+	int delayTimerPoint = false;
+	int delayTimer = 150;
+
 	//==================================================
 	// ▼ カメラ関連
 	//==================================================
@@ -171,4 +191,24 @@ private:
 
 	// カメラの元位置を保存
 	Vector3 defaultCameraPos_ = {0.0f, 1.0f, -10.0f};
+
+	// 音声//
+
+	// 音声ファイル
+	uint32_t soundTitleHandle_ = 0;
+	uint32_t soundGameHandle_ = 0;
+	uint32_t soundClearHandle_ = 0;
+	uint32_t soundOverHandle_ = 0;
+
+	// 攻撃効果音
+	uint32_t soundBotanHandle_ = 0;
+	uint32_t soundTogeHandle_ = 0;
+	uint32_t soundBeamHandle_ = 0;
+	uint32_t soundKamiHandle_ = 0;
+	//----------------------------
+
+	// 音声再生ハンドル
+	uint32_t voiceTitleHandle_ = 0;
+
+	
 };

@@ -3,7 +3,7 @@
 using namespace KamataEngine;
 
 void Player::Initialize(Model* model, Camera* camera) {
-	assert(model);
+	//assert(model);
 	model_ = model;
 	camera_ = camera;
 	worldTransform_.Initialize();
